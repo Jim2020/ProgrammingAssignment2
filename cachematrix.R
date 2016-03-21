@@ -1,15 +1,50 @@
-## Put comments here that give an overall description of what your
-## functions do
+## R Programming Course - Assignment 2 - Cached Matrix Inverse
+##
+## Return the inverse of a matrix and cache it
+## If a cached value exists for a given matrix, then use it.
+## Otherwise, perform a computation.
 
-## Write a short comment describing this function
+## Makes a special "matrix" object that can cache its inverse
+## Create a list containing a function to:
+##    1 - set the value of the matrix
+##    2 - get the value of the matrix
+##    3 - set the value of the inverse
+##    4 - get the value of the inverse
 
 makeCacheMatrix <- function(x = matrix()) {
-
+    m<-NULL
+    set<-function(y){
+        x<<-y
+        m<<-NULL
+    }
+    get<-function() x
+    setinverse<-function(solve) m<<- solve
+    getinverse<-function() m
+    list(set=set, get=get,
+         setinverse=setinverse,
+         getinverse=getinverse)
 }
 
 
-## Write a short comment describing this function
+## Computes the inverse of the special "matrix" returned by makeCacheMatrix above.
+## If the inverse has already been calculated and the matrix has not changed,
+## then the inverse is retrieved from the cache rather than computed.
 
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+    ## Return a matrix that is the inverse of 'x'
+    
+    ## First check if inverse is cached and the matrix is the same
+    m<-x$getinverse()
+    data<-x$get()
+    if (!is.null(m)) {
+        if (identical (x, data)) {
+            message("getting cached data")
+            return(m)
+        }
+    }
+    
+    ## Perform computation and save it
+    m<-solve(data, ...)
+    x$setinverse(m)
+    m
 }
